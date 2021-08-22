@@ -1,0 +1,69 @@
+Script started on Sun 22 Aug 2021 01:37:36 PM UTC
+^[]0;root@lvm:~^G^[[?1034h[root@lvm ~]# #Сгенерируем файлы
+^[]0;root@lvm:~^G[root@lvm ~]# dd if=/dev/urandom of=/home/testfile1 bs=10M count=3
+3+0 records in
+3+0 records out
+31457280 bytes (31 MB) copied, 1.16162 s, 27.1 MB/s
+^[]0;root@lvm:~^G[root@lvm ~]# dd if=/dev/urandom of=/home/testfile2 bs=10M count=3
+3+0 records in
+3+0 records out
+31457280 bytes (31 MB) copied, 1.08252 s, 29.1 MB/s
+^[]0;root@lvm:~^G[root@lvm ~]# dd if=/dev/urandom of=/home/testfile3 bs=10M count=3
+3+0 records in
+3+0 records out
+31457280 bytes (31 MB) copied, 1.07448 s, 29.3 MB/s
+^[]0;root@lvm:~^G[root@lvm ~]#
+^[]0;root@lvm:~^G[root@lvm ~]# #Создаем снапшот для /dev/VolGroup00/LV_home размером 500 Mb
+^[]0;root@lvm:~^G[root@lvm ~]# lvcreate -L500M -s -n LV_home_snap001 /dev/VolGroup00/LV_home
+  Rounding up size to full physical extent 512.00 MiB
+  Logical volume "LV_home_snap001" created.
+^[]0;root@lvm:~^G[root@lvm ~]# ll /home
+total 92180
+drwx------. 2 root    root	 16384 Aug 22 11:34 ^[[0m^[[38;5;27mlost+found^[[0m
+-rw-r--r--. 1 root    root    31457280 Aug 22 13:37 testfile1
+-rw-r--r--. 1 root    root    31457280 Aug 22 13:37 testfile2
+-rw-r--r--. 1 root    root    31457280 Aug 22 13:37 testfile3
+drwx------. 3 vagrant vagrant     4096 May 12  2018 ^[[38;5;27mvagrant^[[0m
+^[]0;root@lvm:~^G[root@lvm ~]#
+^[]0;root@lvm:~^G[root@lvm ~]# #Сгенерируем файлы
+^[]0;root@lvm:~^G[root@lvm ~]# dd if=/dev/urandom of=/home/testfile4 bs=10M count=3
+3+0 records in
+3+0 records out
+31457280 bytes (31 MB) copied, 1.17776 s, 26.7 MB/s
+^[]0;root@lvm:~^G[root@lvm ~]# dd if=/dev/urandom of=/home/testfile5 bs=10M count=3
+3+0 records in
+3+0 records out
+31457280 bytes (31 MB) copied, 1.20248 s, 26.2 MB/s
+^[]0;root@lvm:~^G[root@lvm ~]# dd if=/dev/urandom of=/home/testfile6 bs=10M count=3
+3+0 records in
+3+0 records out
+31457280 bytes (31 MB) copied, 1.20342 s, 26.1 MB/s
+^[]0;root@lvm:~^G[root@lvm ~]# ll /home
+total 184340
+drwx------. 2 root    root	 16384 Aug 22 11:34 ^[[0m^[[38;5;27mlost+found^[[0m
+-rw-r--r--. 1 root    root    31457280 Aug 22 13:37 testfile1
+-rw-r--r--. 1 root    root    31457280 Aug 22 13:37 testfile2
+-rw-r--r--. 1 root    root    31457280 Aug 22 13:37 testfile3
+-rw-r--r--. 1 root    root    31457280 Aug 22 13:37 testfile4
+-rw-r--r--. 1 root    root    31457280 Aug 22 13:37 testfile5
+-rw-r--r--. 1 root    root    31457280 Aug 22 13:37 testfile6
+drwx------. 3 vagrant vagrant     4096 May 12  2018 ^[[38;5;27mvagrant^[[0m
+^[]0;root@lvm:~^G[root@lvm ~]#
+^[]0;root@lvm:~^G[root@lvm ~]# #Восстановим /home из снапшота
+^[]0;root@lvm:~^G[root@lvm ~]# umount /home
+^[]0;root@lvm:~^G[root@lvm ~]# lvconvert --merge /dev/VolGroup00/LV_home_snap001
+  Merging of volume VolGroup00/LV_home_snap001 started.
+  VolGroup00/LV_home: Merged: 83.72%
+  VolGroup00/LV_home: Merged: 100.00%
+^[]0;root@lvm:~^G[root@lvm ~]# mount /home
+^[]0;root@lvm:~^G[root@lvm ~]# ll /home
+total 92180
+drwx------. 2 root    root	 16384 Aug 22 11:34 ^[[0m^[[38;5;27mlost+found^[[0m
+-rw-r--r--. 1 root    root    31457280 Aug 22 13:37 testfile1
+-rw-r--r--. 1 root    root    31457280 Aug 22 13:37 testfile2
+-rw-r--r--. 1 root    root    31457280 Aug 22 13:37 testfile3
+drwx------. 3 vagrant vagrant     4096 May 12  2018 ^[[38;5;27mvagrant^[[0m
+^[]0;root@lvm:~^G[root@lvm ~]# exit
+
+Script done on Sun 22 Aug 2021 01:38:37 PM UTC
+
